@@ -25,4 +25,9 @@ fotosCtrl.postFotos = async (req, res)=>{
 
     
 }
+
+fotosCtrl.getAllFotos = async(req, res)=>{
+    const arrayFotos = await modelGallery.find()
+    res.send(arrayFotos)
+}
 module.exports = fotosCtrl

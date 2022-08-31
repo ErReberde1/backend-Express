@@ -12,8 +12,10 @@ userCtrl.postUser = async (req, res)=>{
     
     const {nombre, apellidos, cumpleaños, username, email, contraseña } = req.body;
     
+    const mailFound = await userModel.findOne({email: email})
     
-    
+    if (mailFound) return res.status(200).json({"message": "Este mail ya está en uso"})
+
     const newUser = await new userModel({
         nombre: nombre,
         apellidos: apellidos,
@@ -24,11 +26,10 @@ userCtrl.postUser = async (req, res)=>{
     })
     
     const savedUser = await newUser.save() 
-    const token= jwt.sign({id: savedUser._id}, "socialReact" , {
+    const token= await jwt.sign({id: savedUser._id}, "socialReact" , {
         expiresIn: 86400
     } )
     
-
 
     res.status(200).json({token})
 }

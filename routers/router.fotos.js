@@ -1,10 +1,10 @@
 const express = require('express')
 const router = express.Router()
 
-const {getFotos, postFotos} = require('../controllers/fotos.controller.js')
+const {getFotos, postFotos,getAllFotos} = require('../controllers/fotos.controller.js')
 
 router.route('/')
-    .get()
+    .get(getAllFotos)
     .post(postFotos)
     
 

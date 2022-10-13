@@ -4,7 +4,8 @@ const cors = require('cors')
 const uploader = require('express-fileupload')
 const http = require('http')
 const morgan = require('morgan')
-const {Server} = require('socket.io')
+const {Server, fetchUserId} = require('socket.io')
+const { info } = require('console')
 
 
 
@@ -16,20 +17,23 @@ const io = new Server(server,{
     }
 })
 
-
-const users = []
-io.on("connection",(socket)=>{
-    
-    
-    
+let users =[]
+io.on("connection", (socket)=>{
     console.log(`Nuevo usuario conectado con id ${socket.id}`)
     
-    
+    io.on("chatuser", (id)=>{
+        users[id] = socket.id
+        io.emit("connected", (users)=>{
+            socket.broadcast.emit("arrayUsers", users)
+        } )
+    })
+
     io.emit("newconnection",()=>{
         socket.id
     })
+
     
-    socket.on("message", (message)=>{
+    io.on("message", (message)=>{
         console.log(message)
         socket.broadcast.emit("message",{
             body: message,

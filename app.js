@@ -17,23 +17,40 @@ const io = new Server(server,{
     }
 })
 
-let users =[]
+let users = [{
+    id: "",
+    chatId: ""
+}]
+
 io.on("connection", (socket)=>{
     console.log(`Nuevo usuario conectado con id ${socket.id}`)
     
-    io.on("chatuser", (id)=>{
-        users[id] = socket.id
-        io.emit("connected", (users)=>{
-            socket.broadcast.emit("arrayUsers", users)
-        } )
+     socket.on("connected", (id)=>{
+        
+        console.log("te escucho!!!")
+        let foundID = users.find(user=>user.id == id)
+        
+        
+        if (!foundID) {
+            users.push({ 
+                id: id,
+                chatId: socket.id}) 
+            socket.broadcast.emit("connected", users)
+            console.log("Conectados")
+        }else{
+            socket.broadcast.emit("connected", users)
+            console.log(users)
+        }
+        socket.broadcast.emit("connected", users)
+        
+        
+        
     })
-
-    io.emit("newconnection",()=>{
+    /* io.emit("newconnection",()=>{
         socket.id
-    })
+    }) */
 
-    
-    io.on("message", (message)=>{
+    socket.on("message", (message)=>{
         console.log(message)
         socket.broadcast.emit("message",{
             body: message,
@@ -52,7 +69,9 @@ app.use(uploader({
     temFileDir: './temp'
 }))
 app.use(morgan("dev"))
-app.use(cors())
+app.use(cors({
+    origin: "*"
+}))
 app.use(express.json())
 
 //routers

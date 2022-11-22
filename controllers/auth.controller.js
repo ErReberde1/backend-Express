@@ -6,9 +6,9 @@ authCtrl= {}
 const userModel = require('../models/modeluser.schema')
 
 authCtrl.signIn = async (req, res)=>{
+    try{
     const {email, contraseña} = req.body;
     
-
     const userFound = await userModel.findOne({email : email})
 
     
@@ -23,7 +23,9 @@ authCtrl.signIn = async (req, res)=>{
         expiresIn: 86400
     })
     await res.json({token, userFound})
-     
+    }catch(err){
+        res.send(err)
+    }
 }
 
 module.exports = authCtrl

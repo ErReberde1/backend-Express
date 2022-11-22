@@ -8,7 +8,6 @@ router.route("/")
     .get()
     .post(postUser)
 
-
 router.route('/:id')
     .put(updateUser)
     .get(getUser1)

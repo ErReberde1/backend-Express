@@ -5,6 +5,7 @@ authCtrl = {};
 const userModel = require("../models/modeluser.schema");
 
 authCtrl.signIn = async (req, res) => {
+  console.log(req.body)
   try {
     const { email, contraseña } = req.body;
 

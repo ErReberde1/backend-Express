@@ -27,7 +27,7 @@ authCtrl.signIn = async (req, res) => {
     });
     await res.json({ token, userFound });
   } catch (err) {
-    res.send(err);
+    res.send("mala petición");
   }
 }
 
